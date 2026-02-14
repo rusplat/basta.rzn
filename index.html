@@ -3,202 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Баста — Билеты в Рязани</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Баста — билеты в Рязани</title>
     <style>
-        :root { --accent: #ff3b30; --bg: #000; --card: #1c1c1e; --text: #fff; --gray: #8e8e93; }
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-        /* Фоновое изображение */
-        .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.95)), 
-            url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover; background-position: center; z-index: -1;
+        :root {
+            --bg: #000000;
+            --card: #1c1c1e;
+            --accent: #ff3b30;
+            --text: #ffffff;
+            --gray: #8e8e93;
         }
 
-        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+        .container { max-width: 450px; margin: 0 auto; padding: 20px; }
 
-        /* Шаг 1 */
-        .top-label { color: var(--accent); font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; }
-        h1 { font-size: 45px; font-weight: 800; line-height: 1; margin-bottom: 8px; }
-        .event-info { color: var(--gray); font-size: 14px; margin-bottom: 25px; line-height: 1.4; }
-        .event-info b { color: #fff; }
+        /* Шаг 1: Главная */
+        .badge { color: var(--accent); font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; }
+        .info-p { color: var(--gray); font-size: 15px; margin-bottom: 30px; line-height: 1.4; }
+        .info-p b { color: #fff; }
 
-        .scheme-box { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; margin-bottom: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .scheme-box img { width: 100%; border-radius: 10px; filter: contrast(1.1) brightness(0.8); }
-        .scheme-label { text-align: center; font-size: 10px; color: var(--gray); margin-top: 10px; text-transform: uppercase; }
-
-        /* Карточки */
-        .ticket { background: rgba(30,30,32,0.85); border-radius: 18px; padding: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
-        .ticket-name { font-weight: 600; font-size: 18px; }
-        .ticket-price { color: var(--gray); font-size: 14px; margin-top: 3px; }
+        .ticket-row { 
+            background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 12px; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .t-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+        .t-price { color: var(--gray); font-size: 14px; }
 
         .counter { display: flex; align-items: center; gap: 15px; }
-              .c-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #444; background: none; color: #fff; cursor: pointer; font-size: 18px; }
-        .c-val { font-weight: 600; min-width: 15px; text-align: center; }
+        .btn-c { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #3a3a3c; background: none; color: #fff; cursor: pointer; font-size: 20px; }
+        .val { font-size: 18px; font-weight: 600; min-width: 15px; text-align: center; }
 
-        .footer-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 440px; background: #fff; color: #000; padding: 18px; border-radius: 18px; display: none; justify-content: space-between; font-weight: 800; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100; cursor: pointer; }
+        /* Плавающая кнопка внизу */
+        .footer-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 410px; background: #fff; color: #000;
+            padding: 20px; border-radius: 18px; display: none; justify-content: space-between;
+            align-items: center; font-weight: 700; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-        /* Формы */
-        input { width: 100%; padding: 18px; border-radius: 14px; border: 1px solid #333; background: #111; color: #fff; margin-bottom: 15px; font-size: 16px; }
-        .main-btn { width: 100%; padding: 18px; border-radius: 14px; border: none; background: #fff; color: #000; font-weight: 800; font-size: 16px; cursor: pointer; }
+        /* Шаг 2: Форма */
+        h2 { font-size: 28px; margin-bottom: 20px; }
+        input { 
+            width: 100%; padding: 18px; background: #1c1c1e; border: 1px solid #3a3a3c; 
+            border-radius: 12px; color: #fff; font-size: 16px; margin-bottom: 15px; outline: none;
+        }
+                input:focus { border-color: var(--accent); }
+        .btn-big { 
+            width: 100%; padding: 18px; background: #fff; color: #000; 
+            border-radius: 12px; border: none; font-size: 16px; font-weight: 700; cursor: pointer;
+        }
 
-        /* Оплата */
-        .pay-box { background: #fff; color: #000; padding: 25px; border-radius: 20px; margin-top: 20px; }
-        .pay-box p { font-size: 12px; color: #666; }
-        .pay-box b { font-size: 22px; display: block; margin-bottom: 12px; }
-        .timer { font-size: 30px; font-weight: 800; color: var(--accent); text-align: center; margin: 20px 0; }
+        /* Шаг 3: Оплата */
+        .pay-card { background: #fff; color: #000; padding: 25px; border-radius: 20px; margin-top: 20px; }
+        .pay-card p { font-size: 13px; color: #666; margin-bottom: 4px; }
+        .pay-card b { font-size: 20px; display: block; margin-bottom: 15px; }
+        .timer { color: var(--accent); font-size: 32px; font-weight: 800; text-align: center; margin: 20px 0; }
+        .no-link { color: inherit !important; text-decoration: none !important; }
 
-        /* Загрузка */
-        .loader { display: none; text-align: center; padding: 80px 20px; }
-        .spinner { width: 40px; height: 40px; border: 3px solid #222; border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        /* Лоадер */
+        .loader { display: none; text-align: center; padding-top: 100px; }
+        .spinner { 
+            width: 40px; height: 40px; border: 3px solid #333; border-top: 3px solid #fff; 
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; 
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .hidden { display: none; }
-        .no-link { color: inherit !important; text-decoration: none !important; }
     </style>
 </head>
 <body>
 
-<div class="bg-overlay"></div>
-
 <div class="container" id="app">
     <!-- Шаг 1 -->
     <div id="step1">
-        <div class="top-label">Рязань Афиша</div>
+        <span class="badge">Рязань Афиша</span>
         <h1>Баста</h1>
-        <div class="event-info">
+        <div class="info-p">
             <b>23 мая, 19:00</b><br>
             ДС «Олимпийский»<br>
             Рязань, ул. Зубковой, 12к2
         </div>
 
-        <div class="scheme-box">
-            <img src="https://avatars.mds.yandex.net/get-afisha/411440/e33682948f95c024564c7f0709b30c04/origin" alt="Схема">
-            <div class="scheme-label">Выберите количество билетов</div>
-        </div>
-
-        <div class="ticket">
-            <div><div class="ticket-name">Танцпол</div><div class="ticket-price">2 500 ₽</div></div>
+        <div class="ticket-row">
+            <div><div class="t-name">Танцпол</div><div class="t-price">2 500 ₽</div></div>
             <div class="counter">
-                <button class="c-btn" onclick="upd('t1', -1)">–</button>
-                <div class="c-val" id="t1">0</div>
-                <button class="c-btn" onclick="upd('t1', 1)">+</button>
-            </div>
-        </div>
-        <div class="ticket">
-            <div><div class="ticket-name">Фан-зона</div><div class="ticket-price">4 500 ₽</div></div>
-            <div class="counter">
-                <button class="c-btn" onclick="upd('t2', -1)">–</button>
-                <div class="c-val" id="t2">0</div>
-                <button class="c-btn" onclick="upd('t2', 1)">+</button>
-            </div>
-        </div>
-        <div class="ticket">
-            <div><div class="ticket-name">Сектор VIP</div><div class="ticket-price">8 000 ₽</div></div>
-            <div class="counter">
-                <button class="c-btn" onclick="upd('t3', -1)">–</button>
-                <div class="c-val" id="t3">0</div>
-                <button class="c-btn" onclick="upd('t3', 1)">+</button>
+                <button class="btn-c" onclick="change('t1', -1)">–</button>
+                <div class="val" id="t1">0</div>
+                <button class="btn-c" onclick="change('t1', 1)">+</button>
             </div>
         </div>
 
-        <div style="height: 100px;"></div>
-        <div class="footer-btn" id="go-next" onclick="toStep2()">
-            <span>Билетов: <small id="c-all">0</small></span>
-            <span id="p-all">0 ₽</span>
+        <div class="ticket-row">
+            <div><div class="t-name">Фан-зона</div><div class="t-price">4 500 ₽</div></div>
+            <div class="counter">
+                <button class="btn-c" onclick="change('t2', -1)">–</button>
+                <div class="val" id="t2">0</div>
+                <button class="btn-c" onclick="change('t2', 1)">+</button>
+            </div>
+        </div>
+
+        <div class="ticket-row">
+            <div><div class="t-name">Сектор VIP</div><div class="t-price">8 000 ₽</div></div>
+            <div class="counter">
+                <button class="btn-c" onclick="change('t3', -1)">–</button>
+                <div class="val" id="t3">0</div>
+                <button class="btn-c" onclick="change('t3', 1)">+</button>
+            </div>
+        </div>
+
+        <div class="footer-bar" id="footer" onclick="goStep2()">
+            <span>Выбрано: <span id="total-c">0</span></span>
+            <span id="total-p">0 ₽</span>
         </div>
     </div>
 
     <!-- Шаг 2 -->
     <div id="step2" class="hidden">
-        <h2 style="margin-bottom: 20px;">Ваши данные</h2>
-        <input type="text" id="fio" placeholder="ФИО полностью">
-        <input type="tel" id="tel" value="+7 " oninput="fixTel(this)">
-        <input type="email" id="mail" placeholder="E-mail">
-        <button class="main-btn" onclick="toStep3()">Продолжить</button>
+        <h2>Ваши данные</h2>
+        <input type="text" id="name" placeholder="ФИО">
+        <input type="tel" id="phone" value="+7 " oninput="fixPhone(this)">
+        <input type="email" id="email" placeholder="E-mail">
+        <button class="btn-big" onclick="goStep3()">Перейти к оплате</button>
     </div>
 
     <!-- Шаг 3 -->
     <div id="step3" class="hidden">
         <h2 style="text-align: center;">Оплата СБП</h2>
-        <div class="timer" id="tm">05:00</div>
-        <div class="pay-box">
-            <p>Сумма:</p>
-            <b id="f-sum">0 ₽</b>
-            <p>Номер (СБП):</p>
+        <div class="timer" id="timer">05:00</div>
+        <div class="pay-card">
+            <p>Сумма перевода:</p>
+            <b id="final-sum">0 ₽</b>
+            <p>Номер телефона (СБП):</p>
             <b class="no-link">+7 (929) 942 81 07</b>
-            <p>Банк:</p>
+            <p>Банк получателя:</p>
             <b>КБ Солидарность</b>
         </div>
-        <button class="main-btn" style="margin-top: 20px; background: var(--accent); color: #fff;" onclick="toFinal()">Я оплатил(а)</button>
+        <button class="btn-big" style="background: var(--accent); color: #fff; margin-top: 20px;" onclick="goFinal()">Я оплатил(а)</button>
     </div>
 
     <!-- Финал -->
-    <div id="stepFinal" class="hidden" style="text-align: center; padding-top: 50px;">
-        <div style="font-size: 50px;">✅</div>
-        <h2 style="margin-top: 20px;">Заявка принята</h2>
-        <p style="color: var(--gray); margin-top: 15px;">Билеты будут отправлены на почту после проверки оплаты (до 24 часов).</p>
+    <div id="stepFinal" class="hidden" style="text-align: center; padding-top: 60px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">📨</div>
+        <h2>Готово!</h2>
+        <p style="color: var(--gray); margin-top: 15px; line-height: 1.6;">Запрос отправлен модератору. Билеты придут на вашу почту в течение 24 часов после подтверждения оплаты.</p>
     </div>
 
-    <!-- Лоадер -->
+    <!-- Загрузка -->
     <div id="loader" class="loader">
         <div class="spinner"></div>
-        <p id="ld-txt" style="color: var(--gray);"></p>
+        <p id="l-text" style="color: var(--gray);"></p>
     </div>
 </div>
 
 <script>
-    let c = {t1:0, t2:0, t3:0}, p = {t1:2500, t2:4500, t3:8000};
+    let counts = {t1:0, t2:0, t3:0}, prices = {t1:2500, t2:4500, t3:8000};
 
-    function fixTel(i) { if(!i.value.startsWith('+7 ')) i.value = '+7 '; }
+    function fixPhone(el) { if(!el.value.startsWith('+7 ')) el.value = '+7 '; }
 
-    function upd(id, d) {
-        c[id] = Math.max(0, c[id] + d);
-        document.getElementById(id).innerText = c[id];
-        let total = (c.t1*p.t1)+(c.t2*p.t2)+(c.t3*p.t3);
-        let count = c.t1+c.t2+c.t3;
-        const btn = document.getElementById('go-next');
-        if(count > 0) {
-            btn.style.display = 'flex';
-            document.getElementById('c-all').innerText = count;
-            document.getElementById('p-all').innerText = total.toLocaleString() + ' ₽';
-        } else { btn.style.display = 'none'; }
+    function change(id, d) {
+        counts[id] = Math.max(0, counts[id] + d);
+        document.getElementById(id).innerText = counts[id];
+        let totalC = counts.t1 + counts.t2 + counts.t3;
+        let totalP = (counts.t1*prices.t1) + (counts.t2*prices.t2) + (counts.t3*prices.t3);
+        
+        const f = document.getElementById('footer');
+        if(totalC > 0) {
+            f.style.display = 'flex';
+            document.getElementById('total-c').innerText = totalC;
+            document.getElementById('total-p').innerText = totalP.toLocaleString() + ' ₽';
+        } else { f.style.display = 'none'; }
     }
 
-    function load(t, txt, next) {
-        document.querySelectorAll('#app > div:not(#loader)').forEach(el => el.classList.add('hidden'));
+    function showL(t, txt, next) {
+        document.querySelectorAll('#app > div:not(#loader)').forEach(d => d.classList.add('hidden'));
         const l = document.getElementById('loader');
         l.style.display = 'block';
-        document.getElementById('ld-txt').innerText = txt;
+        document.getElementById('l-text').innerText = txt;
         setTimeout(() => {
             l.style.display = 'none';
             document.getElementById(next).classList.remove('hidden');
-            window.scrollTo(0,0);
         }, t);
     }
 
-    function toStep2() { load(4000, "Проверка билетов...", "step2"); }
-    function toStep3() {
-        if(document.getElementById('fio').value.length < 3) return alert('Введите ФИО');
-        load(4000, "Поиск свободных реквизитов...", "step3");
-        document.getElementById('f-sum').innerText = document.getElementById('p-all').innerText;
-        startTimer(300);
+    function goStep2() { showL(4000, "Проверка билетов...", "step2"); }
+    function goStep3() {
+        if(document.getElementById('name').value.length < 2) return alert('Введите ФИО');
+        showL(4000, "Поиск свободных реквизитов...", "step3");
+        document.getElementById('final-sum').innerText = document.getElementById('total-p').innerText;
+        startTimer();
     }
-    function toFinal() { load(20000, "Система ищет оплату...", "stepFinal"); }
+    function goFinal() { showL(20000, "Система ищет оплату...", "stepFinal"); }
 
-    function startTimer(d) {
-        let t = d, m, s;
+    function startTimer() {
+        let t = 300, m, s;
         setInterval(() => {
-            m = parseInt(t/60, 10); s = parseInt(t%60, 10);
-            document.getElementById('tm').innerText = (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
-            if (--t < 0) t = 0;
+            m = Math.floor(t/60); s = t%60;
+            document.getElementById('timer').innerText = (m<10?'0'+m:m)+':'+(s<10?'0'+s:s);
+            if(--t < 0) t = 0;
         }, 1000);
     }
 </script>
+
 </body>
 </html>

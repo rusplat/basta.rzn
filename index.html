@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Баста — Билеты на концерт</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --accent: #ff3b30; /* Красный акцент */
+            --text: #ffffff;
+            --text-gray: #a1a1a1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+        .container { max-width: 450px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Шапка */
+        header { text-align: center; padding: 40px 0 20px; }
+        .artist-name { font-size: 48px; font-weight: 900; text-transform: uppercase; letter-spacing: -2px; line-height: 1; margin-bottom: 10px; }
+        .event-info { color: var(--accent); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Карточки билетов */
+        .ticket-list { display: grid; gap: 15px; margin-top: 20px; }
+        .ticket-card {
+            background: var(--card-bg); border: 1px solid #333; padding: 20px; border-radius: 16px;
+            cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        .ticket-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .ticket-info h3 { font-size: 18px; margin-bottom: 4px; }
+        .ticket-info p { font-size: 12px; color: var(--text-gray); }
+        .price { font-size: 18px; font-weight: 700; }
+
+        /* Поля ввода */
+        input {
+            width: 100%; padding: 18px; margin-bottom: 15px; border-radius: 12px;
+            border: 1px solid #333; background: #222; color: #fff; font-size: 16px; outline: none;
+        }
+        input:focus { border-color: var(--accent); }
+
+        .btn {
+            background: var(--text); color: #000; border: none; padding: 18px;
+            border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s;
+        }
+        .btn:hover { background: var(--accent); color: #fff; }
+
+        /* Оплата */
+              .pay-box { background: #fff; color: #000; padding: 25px; border-radius: 20px; margin-top: 20px; text-align: left; }
+        .pay-box p { color: #666; font-size: 13px; margin-bottom: 4px; }
+        .pay-box b { font-size: 18px; display: block; margin-bottom: 15px; color: #000; }
+        /* Чтобы номер не был синим */
+        .no-link { color: inherit !important; text-decoration: none !important; }
+
+        .timer { font-size: 32px; font-weight: 900; margin: 20px 0; color: var(--accent); text-align: center; }
+
+        /* Загрузка */
+        .loader-wrap { display: none; text-align: center; margin-top: 50px; }
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid #333; border-top: 4px solid var(--accent);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .hidden { display: none; }
+        .success-icon { font-size: 60px; color: #34c759; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Шаг 1: Выбор билета -->
+    <div id="step1">
+        <header>
+            <div class="event-info">Большой концерт</div>
+            <div class="artist-name">БАСТА</div>
+            <p style="color: var(--text-gray)">Выбор билетов на ближайшую дату</p>
+        </header>
+
+        <div class="ticket-list">
+            <div class="ticket-card" onclick="selectTicket('Танцпол', '2500₽')">
+                <div class="ticket-info"><h3>Танцпол</h3><p>Доступ к главной арене</p></div>
+                <div class="price">2500₽</div>
+            </div>
+            <div class="ticket-card" onclick="selectTicket('Фан-зона', '4500₽')">
+                <div class="ticket-info"><h3>Фан-зона</h3><p>Ближе к сцене</p></div>
+                <div class="price">4500₽</div>
+            </div>
+            <div class="ticket-card" onclick="selectTicket('VIP (Место)', '8000₽')">
+                <div class="ticket-info"><h3>VIP Сидячие</h3><p>Лучший вид и сервис</p></div>
+                <div class="price">8000₽</div>
+            </div>
+            <div class="ticket-card" onclick="selectTicket('Ложа', '15000₽')">
+                <div class="ticket-info"><h3>Lounge</h3><p>Премиум размещение</p></div>
+                <div class="price">15000₽</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Шаг 2: Почта -->
+    <div id="step2" class="hidden">
+        <h2 style="margin-bottom: 20px; text-align: center;">Куда отправить билет?</h2>
+        <p style="text-align: center; color: var(--text-gray); margin-bottom: 30px;">Электронный билет придет на вашу почту сразу после оплаты.</p>
+        <input type="email" id="email" placeholder="Ваш E-mail" required>
+        <button class="btn" onclick="goToPayment()">Перейти к оплате</button>
+    </div>
+
+    <!-- Шаг 3: Реквизиты -->
+    <div id="step3" class="hidden">
+        <h2 style="text-align: center;">Оплата заказа</h2>
+        <div class="timer" id="timer">05:00</div>
+        
+        <div class="pay-box">
+            <p>Сумма к переводу:</p>
+            <b id="finalPrice" style="font-size: 28px;">0₽</b>
+            
+            <p>Номер телефона (СБП):</p>
+            <b class="no-link">+7 (929) 942 81 07</b>
+            
+            <p>Банк получателя:</p>
+            <b>КБ Солидарность</b>
+        </div>
+        
+        <p style="font-size: 12px; color: var(--text-gray); margin-top: 15px; text-align: center;">
+            Переведите указанную сумму по СБП. После перевода нажмите кнопку «Я оплатил».
+        </p>
+        <button class="btn" style="margin-top: 20px;" onclick="verify()">Я оплатил(а)</button>
+        </div>
+
+    <!-- Финал -->
+    <div id="stepFinal" class="hidden" style="text-align: center; margin-top: 50px;">
+        <div class="success-icon">✓</div>
+        <h2>Запрос принят</h2>
+        <p style="color: var(--text-gray); margin-top: 20px;">
+            Система проверяет ваше поступление. Билет и чек об оплате будут отправлены на почту в течение 24 часов после подтверждения транзакции модератором.
+        </p>
+    </div>
+
+    <!-- Лоадер -->
+    <div id="loader" class="loader-wrap">
+        <div class="spinner"></div>
+        <p id="loaderText">Поиск билетов...</p>
+    </div>
+</div>
+
+<script>
+    let currentPrice = "";
+
+    function showLoader(time, text, nextStepId) {
+        document.querySelectorAll('.container > div:not(#loader)').forEach(el => el.classList.add('hidden'));
+        const loader = document.getElementById('loader');
+        const loaderText = document.getElementById('loaderText');
+        loader.style.display = 'block';
+        loaderText.innerText = text;
+
+        setTimeout(() => {
+            loader.style.display = 'none';
+            document.getElementById(nextStepId).classList.remove('hidden');
+        }, time);
+    }
+
+    function selectTicket(name, price) {
+        currentPrice = price;
+        showLoader(4000, "Проверка наличия билетов...", "step2");
+    }
+
+    function goToPayment() {
+        const email = document.getElementById('email').value;
+        if(!email.includes('@')) { alert('Введите корректный Email'); return; }
+        
+        showLoader(2000, "Бронирование места...", "step3");
+        document.getElementById('finalPrice').innerText = currentPrice;
+        startTimer(300);
+    }
+
+    function verify() {
+        showLoader(20000, "Система ищет оплату в реестре...", "stepFinal");
+    }
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        const display = document.querySelector('#timer');
+        setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            display.textContent = minutes + ":" + seconds;
+            if (--timer < 0) timer = 0;
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

